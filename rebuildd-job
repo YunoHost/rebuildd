@@ -32,6 +32,7 @@ def usage():
     print "   add                     - add jobs, reading from stdin"
     print "   add-deps                - add build-depends, reading from stdin"
     print "   add-quinn-diff <dist>   - add package reading quinn-diff input from stdin"
+    print "   requeue <jobid>         - requeue job for rebuild"
     print "   delete <jobid>          - delete job"
     print "   list-deps               - list the whole depends table"
     print "   list <criteria>=<value> - list jobs matching criteria"
@@ -83,6 +84,11 @@ def add_quinn_diff(dist):
         version = line.split('/')[1].split('_')[1].split('.dsc')[0]
         priority = line.split('/')[1].split('_')[1].split('.dsc')[1].split(':')[0][2:]
         Rebuildd().add_job(name, version, priority, dist)
+
+def requeue_job(jobid):
+    if not Rebuildd().requeue_job(jobid):
+        print "E: rebuild not accepted"
+        sys.exit(1)
 
 def list():
     if len(sys.argv) == 3:
@@ -214,5 +220,7 @@ if len(sys.argv) > 1:
         stats()
     if sys.argv[1] == "delete" and len(sys.argv) > 2:
         delete(int(sys.argv[2]))
+    if sys.argv[1] == "requeue" and len(sys.argv) == 3:
+        requeue_job(int(sys.argv[2]))
 else:
     usage()

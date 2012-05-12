@@ -322,6 +322,20 @@ class Rebuildd(object):
                       % (name, version, dist, arch, mailto))
         return True
 
+    def requeue_job(self, job_id):
+        """Requeue a failed job"""
+
+        if Job.selectBy(id=job_id).count() == 0:
+            RebuilddLog.error("There is no job related to %s that is in the job list" % job_id)
+            return False
+        job = Job.selectBy(id=job_id)[0]
+
+        if job.status in FailedStatus:
+            job.status = JobStatus.WAIT
+            job.host = ""
+
+        return True
+
     def add_deps(self, job_id, dependency_ids):
 
         if Job.selectBy(id=job_id).count() == 0:

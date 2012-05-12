@@ -135,6 +135,9 @@ class RebuilddNetworkClient(threading.Thread):
         if len(args) > 0 and args[0] == "status":
             return self.exec_cmd_job_status(*args)
 
+        if len(args) > 0 and args[0] == "requeue":
+            return self.exec_cmd_job_requeue(*args)
+
         return "E: usage: job <command> [args]\n"
 
     def exec_cmd_job_add(self, *args):
@@ -169,6 +172,15 @@ class RebuilddNetworkClient(threading.Thread):
             return "I: job added\n"
         return "E: error adding job\n"
 
+    def exec_cmd_job_requeue(self, *args):
+        """Requeue job"""
+
+        if len(args) != 2:
+            return "E: usage: job requeue <job_id>\n"
+
+        if self.rebuildd.requeue_job(job_id=int(args[1])):
+            return "I: job requeued\n"
+        return "E: error requeuing the job\n"
 
     def exec_cmd_job_deps(self, *args):
         """Add dependency"""

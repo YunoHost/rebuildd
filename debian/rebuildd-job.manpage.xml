@@ -87,6 +87,15 @@
         </listitem>
       </varlistentry>
       <varlistentry>
+        <term><option>requeue [jobid]</option>
+        </term>
+        <listitem>
+            <para>Reschedule a job.
+                The job id has to be provided as argument. The job must be in
+                an error state (previous build failed).</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
         <term><option>delete [jobid]</option>
         </term>
         <listitem>
