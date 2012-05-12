@@ -293,7 +293,7 @@ class Rebuildd(object):
             arch = self.cfg.arch[0]
 
         if not Dists().get_dist(dist, arch):
-            RebuilddLog.error("Couldn't find dist/arch in the config file for %s_%s on %s/%s, don't adding it" \
+            RebuilddLog.error("Couldn't find dist/arch in the config file for %s_%s on %s/%s, not adding it" \
                            % (name, version, dist, arch))
             return False
 
@@ -307,7 +307,7 @@ class Rebuildd(object):
 
         jobs_count = Job.selectBy(package=pkg, dist=dist, arch=arch, mailto=mailto, status=JobStatus.WAIT).count()
         if jobs_count:
-            RebuilddLog.error("Job already existing for %s_%s on %s/%s, don't adding it" \
+            RebuilddLog.error("Job already existing for %s_%s on %s/%s, not adding it" \
                            % (pkg.name, pkg.version, dist, arch))
             return False
 
