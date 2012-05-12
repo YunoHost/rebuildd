@@ -241,14 +241,9 @@ class Job(threading.Thread, sqlobject.SQLObject):
             smtp = smtplib.SMTP()
             smtp.connect(RebuilddConfig().get('mail', 'smtp_host'),
                          RebuilddConfig().get('mail', 'smtp_port'))
-            if self.mailto:
-                smtp.sendmail(RebuilddConfig().get('mail', 'from'),
-                              self.mailto,
-                              msg.as_string())
-            else:
-                smtp.sendmail(RebuilddConfig().get('mail', 'from'),
-                              RebuilddConfig().get('mail', 'mailto'),
-                              msg.as_string())
+            smtp.sendmail(RebuilddConfig().get('mail', 'from'),
+                          [m.strip() for m in msg['To'].split(",")],
+                          msg.as_string())
         except Exception, error:
             RebuilddLog.error("Unable to send build log mail for job %d: %s" % (self.id, error))
 
