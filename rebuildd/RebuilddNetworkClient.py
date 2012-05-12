@@ -186,7 +186,7 @@ class RebuilddNetworkClient(threading.Thread):
         """Add dependency"""
 
         ret = False
-        if len(args) < 2:
+        if len(args) < 3:
             return "E: usage: job deps <job_id> <dependency_job_id> [dependency_job_id] [...]\n"
 
 	ret = self.rebuildd.add_deps(job_id=args[1],
