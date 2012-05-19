@@ -20,6 +20,7 @@ from __future__ import with_statement
 
 import threading, subprocess, smtplib, time, os, signal, socket, select
 import sqlobject
+from subprocess import Popen,PIPE
 from email.Message import Message
 from Dists import Dists
 from JobStatus import JobStatus
@@ -245,7 +246,11 @@ class Job(threading.Thread, sqlobject.SQLObject):
                           [m.strip() for m in msg['To'].split(",")],
                           msg.as_string())
         except Exception, error:
-            RebuilddLog.error("Unable to send build log mail for job %d: %s" % (self.id, error))
+            try:
+                process = Popen("sendmail", shell=True, stdin=PIPE)
+                process.communicate(input=msg.as_string())
+            except:
+                RebuilddLog.error("Unable to send build log mail for job %d: %s" % (self.id, error))
 
         return True
 
