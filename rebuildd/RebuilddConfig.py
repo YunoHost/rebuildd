@@ -53,6 +53,7 @@ class RebuilddConfig(object, ConfigParser.ConfigParser):
         self.set('build', 'database_uri', 'sqlite:///var/lib/rebuildd/rebuildd.db')
         self.set('build', 'build_more_recent', '1')
         self.set('build', 'more_archs', 'any')
+        self.set('build', 'no_system_arch', '0')
 
         self.set('mail', 'from', 'rebuildd@localhost')
         self.set('mail', 'mailto', 'rebuildd@localhost')
@@ -80,9 +81,10 @@ class RebuilddConfig(object, ConfigParser.ConfigParser):
         self.set('log', 'mail_successful', '0')
 
         self.arch = []
-        parch = os.popen("dpkg --print-architecture")
-        self.arch.append(parch.readline().strip())
-        parch.close()
+        if self.get('build', 'no_system_arch') == 0:
+            parch = os.popen("dpkg --print-architecture")
+            self.arch.append(parch.readline().strip())
+            parch.close()
 
         if not dontparse:
             self.reload()
