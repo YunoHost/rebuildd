@@ -80,14 +80,14 @@ class RebuilddConfig(object, ConfigParser.ConfigParser):
         self.set('log', 'mail_failed', '1')
         self.set('log', 'mail_successful', '0')
 
+        if not dontparse:
+            self.reload()
+
         self.arch = []
         if self.get('build', 'no_system_arch') == 0:
             parch = os.popen("dpkg --print-architecture")
             self.arch.append(parch.readline().strip())
             parch.close()
-
-        if not dontparse:
-            self.reload()
 
         for a in self.get('build', 'more_archs').split(' '):
             self.arch.append(a)
