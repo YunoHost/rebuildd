@@ -1,6 +1,8 @@
 rebuildd (0.4.2) UNRELEASED; urgency=low
 
+  [ Gauvain Pocentek ]
   * Remove unused code (Closes: #671635)
+  * Support multiple recipients
 
  -- Julien Danjou <acid@debian.org>  Thu, 24 May 2012 16:50:03 +0200
 
