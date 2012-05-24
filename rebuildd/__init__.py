@@ -19,8 +19,6 @@
 """rebuildd - Debian packages rebuild tool"""
 
 __author__  = "Julien Danjou <acid@debian.org>"
-__cvsid__   = "$Id$"
-__version__ = "$Rev$"[6:-2]
 __all__ = [
         "Distribution",
         "Enumeration",
