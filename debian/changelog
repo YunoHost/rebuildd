@@ -4,6 +4,8 @@ rebuildd (0.4.2) UNRELEASED; urgency=low
   * Remove unused code (Closes: #671635)
   * Support multiple recipients
   * Improve some error messages
+  * Add a requeue command
+  * Fix the number of arguments for jobs deps
 
  -- Julien Danjou <acid@debian.org>  Thu, 24 May 2012 16:50:03 +0200
 
