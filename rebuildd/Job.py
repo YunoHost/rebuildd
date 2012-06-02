@@ -200,7 +200,8 @@ class Job(threading.Thread, sqlobject.SQLObject):
             return False
 
         # Store in database
-        self.log.text = log
+        if self.log:
+            self.log.text = log
 
         with self.status_lock:
             if self.status != JobStatus.BUILD_OK and \
