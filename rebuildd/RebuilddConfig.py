@@ -84,7 +84,7 @@ class RebuilddConfig(object, ConfigParser.ConfigParser):
             self.reload()
 
         self.arch = []
-        if self.get('build', 'no_system_arch') == 0:
+        if self.getint('build', 'no_system_arch') == 0:
             parch = os.popen("dpkg --print-architecture")
             self.arch.append(parch.readline().strip())
             parch.close()
