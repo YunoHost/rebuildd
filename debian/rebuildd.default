@@ -21,8 +21,10 @@ PBUILDER_BIN=/usr/sbin/pbuilder
 # PBUILDER_MIRROR=http://ftp.debian.org/debian
 
 # Pass other options to pbuilder
-# PBUILDER_OTHER_OPTIONS[0]="--components=main contrib"
-# PBUILDER_OTHER_OPTIONS[1]="--othermirror=deb http://my.apt.repo sid main"
+# PBUILDER_OTHER_OPTIONS[0]="--components"
+# PBUILDER_OTHER_OPTIONS[1]="main contrib"
+# PBUILDER_OTHER_OPTIONS[2]="--othermirror"
+# PBUILDER_OTHER_OPTIONS[3]="deb http://my.apt.repo sid main"
 
 # Distributions to generate and manage
 ARCHS="$(dpkg --print-architecture)"

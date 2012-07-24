@@ -13,6 +13,8 @@ rebuildd (0.4.2) UNRELEASED; urgency=low
 
   [ Julien Danjou ]
   * Update default dists to symbolic names
+  * Fix PBUILDER_OTHER_OPTIONS[] examples in rebuildd.default
+    (Closes: #682422)
 
  -- Julien Danjou <acid@debian.org>  Thu, 24 May 2012 16:50:03 +0200
 
