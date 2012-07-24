@@ -26,7 +26,7 @@ PBUILDER_BIN=/usr/sbin/pbuilder
 
 # Distributions to generate and manage
 ARCHS="$(dpkg --print-architecture)"
-DISTS="etch lenny sid"
+DISTS="stable testing unstable"
 
 # Set to 1 to enable pbuilder/cowbuilder update in cron
 ENABLE_BUILDER_MAINT=0
