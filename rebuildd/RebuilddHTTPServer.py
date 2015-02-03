@@ -66,7 +66,7 @@ class RequestArch:
     def GET(self, dist, arch=None):
         jobs = []
         jobs.extend(Job.select(sqlobject.AND(Job.q.arch == arch, Job.q.dist == dist),
-            orderBy=sqlobject.DESC(Job.q.creation_date))[:10])
+            orderBy=sqlobject.DESC(Job.q.creation_date))[:RebuilddConfig().getint('http', 'max_jobs')])
         return render.base(page=render.tab(jobs=jobs), \
                 arch=arch, \
                 dist=dist, \

@@ -73,6 +73,7 @@ class RebuilddConfig(object, ConfigParser.ConfigParser):
         self.set('http', 'templates_dir', '/usr/share/rebuildd/templates')
         self.set('http', 'cache', '1')
         self.set('http', 'logfile', '/var/log/rebuildd/httpd.log')
+        self.set('http', 'max_jobs', '10')
 
         self.set('log', 'file', "/var/log/rebuildd/rebuildd.log")
         self.set('log', 'time_format', "%Y-%m-%d %H:%M:%S")
