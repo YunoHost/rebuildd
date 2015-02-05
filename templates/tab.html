@@ -1,4 +1,4 @@
-$def with (jobs)
+$def with (jobs, page, nb_pages)
 <table id="list">
   <thead>
     <tr>
@@ -54,3 +54,13 @@ $for job in jobs:
   </tbody>
 </table>
 
+$if nb_pages > 1:
+    <ul class="pagination">
+    $for p in range(1, nb_pages + 1):
+        <li>
+        $if p == page:
+            <span>$p</span>
+        $else:
+            <a href="?p=$p">$p</a>
+        </li>
+    </ul>

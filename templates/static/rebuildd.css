@@ -57,3 +57,15 @@ table #list tr,th,td
 	width: 100%;
 	height: 400px;
 }
+
+.pagination
+{
+	list-style: none;
+	text-align: center;
+}
+.pagination > li
+{
+	list-style: none;
+	margin-left: 5px;
+	display: inline-block;
+}

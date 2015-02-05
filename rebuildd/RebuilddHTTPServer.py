@@ -28,9 +28,27 @@ from JobStatus import FailedStatus
 import tempfile, socket, sqlobject
 import web
 import gdchart
+from math import ceil
 
 render = web.template.render(RebuilddConfig().get('http', 'templates_dir'), \
          cache=RebuilddConfig().getboolean('http', 'cache'))
+
+def _paginate_query(query):
+    # Retrieve requested page
+    page = int(web.input(p=1).p)
+    if page < 1:
+        page = 1
+
+    # Validate and calculate jobs range
+    max_jobs = RebuilddConfig().getint('http', 'jobs_by_page')
+    nb_pages = int(ceil(query.count() / float(max_jobs)))
+    if page > nb_pages:
+        page = nb_pages
+    start = (page - 1) * (max_jobs - 1)
+    end = page * (max_jobs - 1)
+
+    # Return formatted result
+    return (query[start:end], page, nb_pages)
 
 class RequestIndex:
 
@@ -53,8 +71,10 @@ class RequestPackage:
             pkg = Package.selectBy(name=name)[0]
             title = package = name
 
-        jobs.extend(Job.selectBy(package=pkg))
-        return render.base(page=render.tab(jobs=jobs), \
+        result, page, nb_pages = _paginate_query(Job.selectBy(package=pkg))
+
+        jobs.extend(result)
+        return render.base(page=render.tab(jobs=jobs, page=page, nb_pages=nb_pages), \
                 hostname=socket.gethostname(), \
                 title=title, \
                 package=package, \
@@ -65,9 +85,13 @@ class RequestArch:
 
     def GET(self, dist, arch=None):
         jobs = []
-        jobs.extend(Job.select(sqlobject.AND(Job.q.arch == arch, Job.q.dist == dist),
-            orderBy=sqlobject.DESC(Job.q.creation_date))[:RebuilddConfig().getint('http', 'max_jobs')])
-        return render.base(page=render.tab(jobs=jobs), \
+
+        result, page, nb_pages = _paginate_query(Job.select(
+                sqlobject.AND(Job.q.arch == arch, Job.q.dist == dist),
+                orderBy=sqlobject.DESC(Job.q.creation_date)))
+
+        jobs.extend(result)
+        return render.base(page=render.tab(jobs=jobs, page=page, nb_pages=nb_pages), \
                 arch=arch, \
                 dist=dist, \
                 title="%s/%s" % (dist, arch), \
