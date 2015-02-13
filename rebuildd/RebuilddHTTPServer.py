@@ -25,9 +25,10 @@ from Job import Job
 from JobStatus import JobStatus
 from JobStatus import FailedStatus
 
-import tempfile, socket, sqlobject
+import tempfile, socket
 import web
 import gdchart
+from sqlobject.sqlbuilder import IN, AND, DESC, Select
 from math import ceil
 
 render = web.template.render(RebuilddConfig().get('http', 'templates_dir'), \
@@ -64,14 +65,19 @@ class RequestPackage:
         jobs = []
 
         if version:
-            pkg = Package.selectBy(name=name, version=version)[0]
             title = "%s %s" % (name, version)
             package = "%s/%s" % (name, version)
+            query = Job.select(IN(Job.q.package,
+                            Select(Package.q.id, AND(
+                                Package.q.name==name,
+                                Package.q.version==version))))
         else:
-            pkg = Package.selectBy(name=name)[0]
             title = package = name
+            query = Job.select(IN(Job.q.package,
+                            Select(Package.q.id, Package.q.name==name)))
 
-        result, page, nb_pages = _paginate_query(Job.selectBy(package=pkg))
+        result, page, nb_pages = _paginate_query(query.orderBy(
+                DESC(Job.q.package)))
 
         jobs.extend(result)
         return render.base(page=render.tab(jobs=jobs, page=page, nb_pages=nb_pages), \
@@ -87,8 +93,8 @@ class RequestArch:
         jobs = []
 
         result, page, nb_pages = _paginate_query(Job.select(
-                sqlobject.AND(Job.q.arch == arch, Job.q.dist == dist),
-                orderBy=sqlobject.DESC(Job.q.creation_date)))
+                AND(Job.q.arch == arch, Job.q.dist == dist),
+                orderBy=DESC(Job.q.creation_date)))
 
         jobs.extend(result)
         return render.base(page=render.tab(jobs=jobs, page=page, nb_pages=nb_pages), \
