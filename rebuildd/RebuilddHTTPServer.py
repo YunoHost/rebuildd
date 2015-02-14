@@ -41,7 +41,7 @@ def _paginate_query(query):
         page = 1
 
     # Validate and calculate jobs range
-    max_jobs = RebuilddConfig().getint('http', 'jobs_by_page')
+    max_jobs = RebuilddConfig().getint('http', 'jobs_per_page')
     nb_pages = int(ceil(query.count() / float(max_jobs)))
     if page > nb_pages:
         page = nb_pages
