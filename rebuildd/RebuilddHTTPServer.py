@@ -54,17 +54,16 @@ def _paginate_query(query):
 class RequestIndex:
 
     def GET(self):
-		jobs = []
-		
-		query = Job.select(orderBy=DESC(Job.q.creation_date))
-		result, page, nb_pages = _paginate_query(query)
-		jobs.extend(result)
-		return render.base(\
-		        page=render.tab(jobs=jobs, page=page, nb_pages=nb_pages), \
-                title="all builds", \
-                hostname=socket.gethostname(), \
-                archs=RebuilddConfig().arch, \
-                dists=RebuilddConfig().get('build', 'dists').split(' '))
+        jobs = []
+        query = Job.select(orderBy=DESC(Job.q.creation_date))
+        result, page, nb_pages = _paginate_query(query)
+        jobs.extend(result)
+        return render.base(\
+                    page=render.tab(jobs=jobs, page=page, nb_pages=nb_pages), \
+                    title="all builds", \
+                    hostname=socket.gethostname(), \
+                    archs=RebuilddConfig().arch, \
+                    dists=RebuilddConfig().get('build', 'dists').split(' '))
 
 class RequestPackage:
 
