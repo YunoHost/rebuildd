@@ -1,1 +1,12 @@
 *.pyc
+build/
+debian/files
+debian/rebuildd.debhelper.log
+debian/rebuildd.postinst.debhelper
+debian/rebuildd.postrm.debhelper
+debian/rebuildd.prerm.debhelper
+debian/rebuildd.substvars
+debian/rebuildd/
+debian/rebuilddrc
+rebuildd-job.1
+rebuildd.1
