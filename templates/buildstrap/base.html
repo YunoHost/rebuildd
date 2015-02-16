@@ -37,11 +37,11 @@ $def with (page=None, title=None, hostname="a yellow submarine", dists=None, arc
                     <h1>Welcome to Rebuildd on $hostname</h1>
                 </header>
 
-                <div class="content">
+                <div class="content clearfix">
                 $:page
                 </div>
 
-                <div id="graph" class="graph">
+                <div id="graph" class="graph clearfix">
                     <h2>Graph</h2>
                 $if dist and arch:
                     <img src="/graph/buildstats/$dist/$arch" alt="Graph for $dist/$arch" />

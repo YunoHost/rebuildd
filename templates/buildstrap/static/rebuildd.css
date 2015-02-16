@@ -53,3 +53,13 @@ main h2 {
         padding: 4px;
     }
 }
+
+
+
+@media (min-width: 767px) {
+    .pagination {
+        float: right;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
