@@ -1,0 +1,47 @@
+body {
+    padding-top: 30px; /* hero-unit margin bottom */
+}
+
+/** Add some space below inner titles **/
+main h2 {
+    margin-bottom: 12px;
+}
+
+
+@media (max-width: 767px) {
+
+    /** Reduce Hero **/
+    .hero-unit {
+        padding: 30px;
+    }
+    .hero-unit h1 {
+        font-size: 30px;
+    }
+
+    /** Reduce nav-list **/
+    .nav-list {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .nav-list li {
+        display: inline;
+    }
+    .nav-list li a {
+        display: inline-block;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .nav-list .nav-header {
+        display: block;
+    }
+    .nav-list .nav-header a {
+    }
+
+    /** Narrow table cells **/
+    .table th,
+    .table td {
+        padding: 4px;
+    }
+}

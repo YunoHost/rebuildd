@@ -1,0 +1,66 @@
+$def with (page=None, title=None, hostname="a yellow submarine", dists=None, archs=None, dist=None, arch=None, package=None)
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <title>rebuildd\
+        $if title: - $title\
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!--
+        <link href="/twitter-bootstrap/files/css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="/twitter-bootstrap/files/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+ -->
+        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+        <link href="/static/rebuildd.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="container-fluid">
+
+         <header class="hero-unit">
+            <h1>rebuildd on $hostname</h1>
+        </header>
+
+        <div class="row-fluid">
+
+            <nav class="links span2">
+                <ul class="nav nav-list">
+                    <li class="nav-header"><a class="home" href="/">$hostname</a></li>
+                $for d in dists:
+                    <li class="nav-header">$d</li>
+                    $for a in archs:
+                        $if d == dist and a == arch: <li class="active">
+                        $else: <li>
+                            <a href="/dist/$d/arch/$a">$d/$a</a>
+                        </li>
+                </ul>
+            </nav>
+
+            <main class="content span10">
+
+                <header class="page-header clearfix">
+                $if title:
+                    <h1>Status for $title</h1>
+                $else:
+                    <h1>Welcome to Rebuildd on $hostname</h1>
+                </header>
+
+                <div class="content">
+                $:page
+                </div>
+
+                <div id="graph" class="graph">
+                    <h2>Graph</h2>
+                $if dist and arch:
+                    <img src="/graph/buildstats/$dist/$arch" alt="Graph for $dist/$arch" />
+                $elif package:
+                    <img src="/graph/package/$package" alt="Graph for $package" />
+                $else:
+                    <img src="/graph/buildstats/" alt="Graph for build stats" />
+                </div>
+
+            </main>
+
+        </div>
+    </body>
+</html>

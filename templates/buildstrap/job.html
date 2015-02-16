@@ -1,0 +1,56 @@
+$def with (job, build_log)
+<h2>Job $job.id</h2>
+<table class="table-job table table-bordered">
+    <thead>
+        <tr>
+            <th>Package</th>
+            <th>Version</th>
+            <th>Dist/Arch</th>
+            <th>Creation date</th>
+            <th>Status</th>
+            <th>Build start</th>
+            <th>Build end</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><a href="/package/$job.package.name">$job.package.name</a></td>
+            <td><a href="/package/$job.package.name/$job.package.version">$job.package.version</a></td>
+            <td><a href="/dist/$job.dist/arch/$job.arch">$job.dist/$job.arch</a></td>
+            <td>$job.creation_date</td>
+            <td class="">
+            $if job.status == 0:
+                <span class="label label-warning">Duh?</span>
+            $if job.status == 100:
+                <span class="label label-warning">Wait</span>
+            $if job.status == 150:
+                <span class="label label-warning">Wait locked</span>
+            $if job.status == 200:
+                <span class="label label-info">Building</span>
+            $if job.status == 250:
+                <span class="label label-important">Source failed</span>
+            $if job.status == 300:
+                <span class="label label-important">Build failed</span>
+            $if job.status == 350:
+                <span class="label label-important">Post build failed</span>
+            $if job.status == 400:
+                <span class="label label-success">build ok</span>
+            $if job.status == 800:
+                <span class="label label-inverse">Cancelled</span>
+            $if job.status == 850:
+                <span class="label label-warning">Give up</span>
+            $if job.status == 900:
+                <span class="label label-important">Failed</span>
+            $if job.status == 1000:
+                <span class="label label-success">OK</span>
+              </td>
+            <td>$job.build_start</td>
+            <td>$job.build_end</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Build log</h3>
+<pre class="log">
+$build_log
+</pre>
