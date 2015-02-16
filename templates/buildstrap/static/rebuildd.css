@@ -7,16 +7,15 @@ main h2 {
     margin-bottom: 12px;
 }
 
+/** Reduce Hero **/
+.hero-unit {
+    padding: 30px;
+}
+.hero-unit h1 {
+    font-size: 30px;
+}
 
 @media (max-width: 767px) {
-
-    /** Reduce Hero **/
-    .hero-unit {
-        padding: 30px;
-    }
-    .hero-unit h1 {
-        font-size: 30px;
-    }
 
     /** Reduce nav-list **/
     .nav-list {
