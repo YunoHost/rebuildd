@@ -7,12 +7,21 @@ main h2 {
     margin-bottom: 12px;
 }
 
-/** Reduce Hero **/
-.hero-unit {
-    padding: 30px;
+
+
+.nav-list {
+    padding-top: 18px;
 }
-.hero-unit h1 {
-    font-size: 30px;
+
+.nav-header h1 {
+    font-size: 13px;
+    line-height: 18px;
+}
+.nav-header h1 a {
+    color: #999;
+}
+.nav-header h1 a:hover {
+    color: #08c;
 }
 
 @media (max-width: 767px) {
