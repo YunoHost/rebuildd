@@ -70,7 +70,7 @@ class RebuilddConfig(object, ConfigParser.ConfigParser):
         self.set('http', 'ip', '0.0.0.0')
         # This is dedicated to MadCoder
         self.set('http', 'log_lines_nb', '30')
-        self.set('http', 'templates_dir', '/usr/share/rebuildd/templates')
+        self.set('http', 'templates_dir', '/usr/share/rebuildd/templates/default')
         self.set('http', 'cache', '1')
         self.set('http', 'logfile', '/var/log/rebuildd/httpd.log')
         self.set('http', 'jobs_per_page', '10')
