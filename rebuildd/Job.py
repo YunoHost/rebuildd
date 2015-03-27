@@ -27,6 +27,7 @@ from JobStatus import JobStatus
 from JobStatus import FailedStatus
 from RebuilddLog import RebuilddLog, Log
 from RebuilddConfig import RebuilddConfig
+from string import Template
 
 __version__ = "$Rev$"
 
@@ -85,6 +86,85 @@ class Job(threading.Thread, sqlobject.SQLObject):
 
         os.setsid()
 
+    def get_source_cmd(self, dist, package):
+        """Return command used for grabing source for this distribution
+
+        Substitutions are done in the command strings:
+
+        $d => The distro's name
+        $a => the target architecture
+        $p => the package's name
+        $v => the package's version
+        $j => rebuildd job id
+        """
+
+        try:
+	    args = { 'd': dist.name, 'a': dist.arch, 'v': package.version, \
+                'p': package.name, 'j': self.id }
+            t = Template(RebuilddConfig().get('build', 'source_cmd'))
+	    return t.safe_substitute(**args)
+        except TypeError, error:
+            RebuilddLog.error("get_source_cmd has invalid format: %s" % error)
+            return None
+
+    def get_build_cmd(self, dist, package):
+        """Return command used for building source for this distribution
+
+        Substitutions are done in the command strings:
+
+        $d => The distro's name
+        $a => the target architecture
+        $p => the package's name
+        $v => the package's version
+        $j => rebuildd job id
+        """
+
+        # Strip epochs (x:) away
+        try:
+            index = package.version.index(":")
+            args = { 'd': dist.name, 'a': dist.arch, \
+                'v': package.version[index+1:], 'p': package.name, \
+                'j': self.id }
+            t = Template(RebuilddConfig().get('build', 'build_cmd'))
+            return t.safe_substitute(**args)
+        except ValueError:
+            pass
+
+        try:
+            args = { 'd': dist.name, 'a': dist.arch, \
+                'v': package.version, 'p': package.name, \
+                'j': self.id }
+            t = Template(RebuilddConfig().get('build', 'build_cmd'))
+            return t.safe_substitute(**args)
+        except TypeError, error:
+            RebuilddLog.error("get_build_cmd has invalid format: %s" % error)
+            return None
+
+    def get_post_build_cmd(self, dist, package):
+        """Return command used after building source for this distribution
+
+        Substitutions are done in the command strings:
+
+        $d => The distro's name
+        $a => the target architecture
+        $p => the package's name
+        $v => the package's version
+        $j => rebuildd job id
+        """
+
+        cmd = RebuilddConfig().get('build', 'post_build_cmd')
+        if cmd == '':
+            return None
+        try:
+            args = { 'd': dist.name, 'a': dist.arch, \
+                'v': package.version, 'p': package.name, \
+                'j': self.id }
+            t = Template(cmd)
+	    return t.safe_substitute(**args)
+        except TypeError, error:
+            RebuilddLog.error("post_build_cmd has invalid format: %s" % error)
+            return None
+
     def run(self):
         """Run job thread, download and build the package"""
 
@@ -107,11 +187,11 @@ class Job(threading.Thread, sqlobject.SQLObject):
             self.status = JobStatus.BUILDING
 
         # execute commands
-        for cmd, failed_status in ([Dists().get_dist(self.dist, self.arch).get_source_cmd(self.package),
+        for cmd, failed_status in ([self.get_source_cmd(self.package),
                                     JobStatus.SOURCE_FAILED],
-                                   [Dists().get_dist(self.dist, self.arch).get_build_cmd(self.package),
+                                   [self.get_build_cmd(self.package),
                                     JobStatus.BUILD_FAILED],
-                                   [Dists().get_dist(self.dist, self.arch).get_post_build_cmd(self.package),
+                                   [self.get_post_build_cmd(self.package),
                                     JobStatus.POST_BUILD_FAILED]):
             if cmd is None:
                 continue

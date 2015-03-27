@@ -23,63 +23,9 @@ from string import Template
 class Distribution(object):
     """Class implementing a Debian distribution
 
-    Substitutions are done in the command strings:
 
-      $d => The distro's name
-      $a => the target architecture
-      $p => the package's name
-      $v => the package's version
     """
 
     def __init__(self, name, arch):
         self.name = name
         self.arch = arch
-
-    def get_source_cmd(self, package):
-        """Return command used for grabing source for this distribution"""
-
-        try:
-	    args = { 'd': self.name, 'a': self.arch, 'v': package.version, \
-                'p': package.name }
-            t = Template(RebuilddConfig().get('build', 'source_cmd'))
-	    return t.safe_substitute(**args)
-        except TypeError, error:
-            RebuilddLog.error("get_source_cmd has invalid format: %s" % error)
-            return None
- 
-    def get_build_cmd(self, package):
-        """Return command used for building source for this distribution"""
-
-        # Strip epochs (x:) away
-        try:
-            index = package.version.index(":")
-            args = { 'd': self.name, 'a': self.arch, \
-                'v': package.version[index+1:], 'p': package.name }
-            t = Template(RebuilddConfig().get('build', 'build_cmd'))
-	    return t.safe_substitute(**args)
-        except ValueError:
-            pass
-
-        try:
-            args = { 'd': self.name, 'a': self.arch, \
-                'v': package.version, 'p': package.name }
-            t = Template(RebuilddConfig().get('build', 'build_cmd'))
-	    return t.safe_substitute(**args)
-        except TypeError, error:
-            RebuilddLog.error("get_build_cmd has invalid format: %s" % error)
-            return None
-
-    def get_post_build_cmd(self, package):
-        """Return command used after building source for this distribution"""
-
-        cmd = RebuilddConfig().get('build', 'post_build_cmd')
-        if cmd == '':
-            return None
-        try:
-            args = { 'd': self.name, 'a': self.arch, \
-                'v': package.version, 'p': package.name }
-            t = Template(cmd)
-	    return t.safe_substitute(**args)
-        except TypeError, error:
-            RebuilddLog.error("post_build_cmd has invalid format: %s" % error)
-            return None
