@@ -16,6 +16,7 @@ class TestJob(unittest.TestCase):
     def setUp(self):
         rebuildd_global_test_setup()
         self.job = Job(package=Package(name="bash", version="3.1dfsg-8"), arch="alpha", dist="sid")
+        self.job_dotted_version = Job(package=Package(name="bash", version="1:3.1dfsg-8"), arch="alpha", dist="sid")
 
     def tearDown(self):
         rebuildd_global_test_teardown()
@@ -95,6 +96,36 @@ class TestJob(unittest.TestCase):
         self.job.status = JobStatus.BUILD_FAILED
         self.assert_(self.job.send_build_log() is True)
         self.assert_(self.job.status is JobStatus.BUILD_FAILED)
+
+    def test_get_source_cmd(self):
+        RebuilddConfig().set('build', 'source_cmd', '/bin/true $d $a $p $v $j')
+        cmd = self.job.get_source_cmd()
+        self.assert_(self.job.dist in cmd)
+        self.assert_(self.job.package.name in cmd)
+        self.assert_(self.job.package.version in cmd)
+        self.assert_(str(self.job.id) in cmd)
+
+    def test_get_build_cmd(self):
+        RebuilddConfig().set('build', 'build_cmd', '/bin/true $d $a $p $v $j')
+        cmd = self.job.get_build_cmd()
+        self.assert_(self.job.dist in cmd)
+        self.assert_(self.job.arch in cmd)
+        self.assert_(self.job.package.name in cmd)
+        self.assert_(self.job.package.version in cmd)
+        self.assert_(str(self.job.id) in cmd)
+        cmd = self.job_dotted_version.get_build_cmd()
+        self.assert_(self.job_dotted_version.package.version not in cmd)
+
+    def test_get_post_build_cmd(self):
+        RebuilddConfig().set('build', 'post_build_cmd', '')
+        cmd = self.job.get_post_build_cmd()
+        self.assert_(cmd is None)
+        RebuilddConfig().set('build', 'post_build_cmd', '/bin/true $d $a $p $v $j')
+        cmd = self.job.get_post_build_cmd()
+        self.assert_(self.job.dist in cmd)
+        self.assert_(self.job.package.name in cmd)
+        self.assert_(self.job.package.version in cmd)
+        self.assert_(str(self.job.id) in cmd)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJob)
